@@ -220,6 +220,7 @@ $Wscript.CreateShortcut($shortcut)
 ```
 
 8. Use Mimikatz
+
 Tips
 8.1 If it is getting block by group policy, search for Applocker Bypass list.
 https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-
