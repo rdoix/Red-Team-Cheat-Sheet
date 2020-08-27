@@ -27,6 +27,10 @@ dig axfr vhost.com @x.x.x.x
 ## TCPDUMP
 ```
 tcpdump -i eth0 icmp
+tcpdump -i any host x.x.x.x
+tcpdump -i any port xx
+tcpdump -i any src host x.x.x.x
+tcpdump -i any dst port xx
 ```
 
 
