@@ -12,8 +12,9 @@ Credentials Spraying
 ```
 ncrack -U users.txt -P pass.txt ssh://x.x.x.x
 ```
-
-
+```
+hydra -L /Usernames.txt -P Passwords.txt ssh://x.x.x.x
+```
 
 ## DNS - 53
 Perform DNS Zone Transfer check
