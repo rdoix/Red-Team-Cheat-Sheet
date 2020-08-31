@@ -3,12 +3,12 @@
 
 
 ## SSH - 22
-Tunneling
+* Tunneling
 ```
 ssh -L 8443:127.0.0.1:8443 user@x.x.x.x
 ```
 
-Credentials Spraying
+* Credentials Spraying
 ```
 ncrack -U users.txt -P pass.txt ssh://x.x.x.x
 ```
@@ -17,7 +17,7 @@ hydra -L /Usernames.txt -P Passwords.txt ssh://x.x.x.x
 ```
 
 ## DNS - 53
-Perform DNS Zone Transfer check
+* Perform DNS Zone Transfer check
 ```
 dig axfr x.x.x.x
 dig axfr vhost.com @x.x.x.x 
